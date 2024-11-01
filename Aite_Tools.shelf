@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+  <tool name="set_camera_view" label="Set Cam View" icon="PLASMA_App">
+    <script scriptType="python"><![CDATA[# è·åå½å Scene View çè§çªåè§å£
+pane_tab = hou.ui.paneTabOfType(hou.paneTabType.SceneViewer)
+viewport = pane_tab.curViewport()
+
+# è·åå½åéæ©çç¸æºèç¹
+selected_camera = None
+for node in hou.selectedNodes():
+    if node.type().name() == "cam":  # æ£æ¥èç¹æ¯å¦ä¸ºç¸æº
+        selected_camera = node
+        break
+
+# å¦ææ²¡æéä¸­ç¸æºï¼åå°è¯è·åæåå»º cam1
+if not selected_camera:
+    selected_camera = hou.node("/obj/cam1")
+    if not selected_camera:
+        # åå»º cam1 ç¸æº
+        selected_camera = hou.node("/obj").createNode("cam", "cam1")
+        # hou.ui.displayMessage("æªæ¾å° cam1ï¼ç¸æºå·²æ°å»ºä¸º cam1")
+
+# è·åå½åè§å£çåæ¢ç©éµ
+view_transform = viewport.viewTransform()
+
+# è®¾ç½®éå®ç¸æºæ cam1 çä¸çåæ¢ç©éµ
+selected_camera.setWorldTransform(view_transform)
+
+# è®¾ç½®è§çªä½¿ç¨è¯¥ç¸æº
+viewport.setCamera(selected_camera)
+
+# éå®ç¸æº
+viewport.lockCameraToView(True)
+]]></script>
+  </tool>
+</shelfDocument>
